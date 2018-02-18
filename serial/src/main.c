@@ -29,6 +29,7 @@
 */
 #include <asf.h>
 #include "APA102.h"
+#include "output.h"
 
 #define PIN_LED_13 PIN_PA10
 
@@ -75,11 +76,19 @@ int main(void)
 	main_init_system();
 	main_init_gpio();
 	main_init_serial();
+	
+	struct output output_led_13;
+	output_init(&output_led_13, PIN_LED_13);
 
 	while (true) {
-		for (float h = 0.0; h < 360.0; h += 0.1) {
-			APA102_set_color_hsv(h, 0xff, 0xff, 0xff);
-		}
+		delay_ms(900);
+		output_set(&output_led_13);
+		delay_ms(100);
+		output_clear(&output_led_13);
+		
+		//for (float h = 0.0; h < 360.0; h += 0.1) {
+			//APA102_set_color_hsv(h, 0xff, 0xff, 0xff);
+		//}
 	}
 }
 

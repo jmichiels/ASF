@@ -4,6 +4,7 @@
 * Created: 2/17/2018 5:00:49 PM
 *  Author: Jacques
 */
+#include "asf.h"
 #include "APA102.h"
 
 static struct spi_module spi_master_instance;
@@ -34,6 +35,11 @@ void APA102_init(void)
 static uint8_t buffer[] = {
 	0x00, 0x00, 0x00, 0x00, 0xe0, 0x00, 0x00, 0x00, 0x11, 0x11, 0x11, 0x11
 };
+
+#define APA102_COLOR_R_OFFSET 7
+#define APA102_COLOR_G_OFFSET 6
+#define APA102_COLOR_B_OFFSET 5
+#define APA102_GLOBAL_OFFSET  4
 
 void APA102_set_color_rgb(uint8_t r, uint8_t g, uint8_t b, uint8_t global)
 {

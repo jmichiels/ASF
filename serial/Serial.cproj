@@ -549,6 +549,12 @@
     <Compile Include="src\ASF\common\utils\stdio\stdio_usb\stdio_usb.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\output.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\output.h">
+      <SubType>compile</SubType>
+    </Compile>
     <None Include="src\ASF\sam0\drivers\rtc\rtc_count.h">
       <SubType>compile</SubType>
     </None>
