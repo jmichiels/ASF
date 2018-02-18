@@ -28,8 +28,12 @@
 * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
 */
 #include <asf.h>
+#include "APA102.h"
 
-#define PIN_LED_BUILTIN PIN_PA10
+#define PIN_LED_13 PIN_PA10
+
+#define PIN_LED_APA102_DO PIN_PA00 // data out
+#define PIN_LED_APA102_CO PIN_PA01 // clock out
 
 static void main_init_system(void)
 {
@@ -44,6 +48,9 @@ static void main_init_system(void)
 	
 	// Initialize delay.
 	delay_init();
+	
+	// Initialize RGB led.
+	APA102_init();
 }
 
 static void main_init_serial(void)
@@ -60,7 +67,7 @@ static void main_init_gpio(void)
 	config_output.direction = PORT_PIN_DIR_OUTPUT;
 	
 	// Configure output pins.
-	port_pin_set_config(PIN_LED_BUILTIN, &config_output);
+	port_pin_set_config(PIN_LED_13, &config_output);
 }
 
 int main(void)
@@ -68,13 +75,11 @@ int main(void)
 	main_init_system();
 	main_init_gpio();
 	main_init_serial();
-	
-	uint16_t cnt = 0;
-	
+
 	while (true) {
-		printf("Hello World %d\n", cnt++);
-		port_pin_toggle_output_level(PIN_PA10);
-		delay_ms(500);
+		for (float h = 0.0; h < 360.0; h += 0.1) {
+			APA102_set_color_hsv(h, 0xff, 0xff, 0xff);
+		}
 	}
 }
 
