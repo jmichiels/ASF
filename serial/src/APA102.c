@@ -36,15 +36,16 @@ static uint8_t buffer[] = {
 	0x00, 0x00, 0x00, 0x00, 0xe0, 0x00, 0x00, 0x00, 0x11, 0x11, 0x11, 0x11
 };
 
+#define APA102_GLOBAL_OFFSET 4
+
 #define APA102_COLOR_R_OFFSET 7
 #define APA102_COLOR_G_OFFSET 6
 #define APA102_COLOR_B_OFFSET 5
-#define APA102_GLOBAL_OFFSET  4
 
 void APA102_set_color_rgb(uint8_t r, uint8_t g, uint8_t b, uint8_t global)
 {
-	// Set brightness.
-	buffer[APA102_GLOBAL_OFFSET] = 0xe0 | (global >> 3);
+	// Set brightness (0-31, 5 bits).
+	buffer[APA102_GLOBAL_OFFSET] = 0xe0 | (global & 0x1f);
 	
 	// Set color.
 	buffer[APA102_COLOR_R_OFFSET] = r;
