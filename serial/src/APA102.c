@@ -4,6 +4,7 @@
 * Created: 2/17/2018 5:00:49 PM
 *  Author: Jacques
 */
+#include <math.h>
 #include "asf.h"
 #include "APA102.h"
 
@@ -55,7 +56,15 @@ void APA102_set_color_rgb(uint8_t r, uint8_t g, uint8_t b, uint8_t global)
 	spi_write_buffer_wait(&spi_master_instance, buffer, sizeof(buffer));
 }
 
-static void hsv_to_rgb(float h, uint8_t s, uint8_t v, uint8_t *r, uint8_t *g, uint8_t *b) {
+static float constrain_angle(float a) {
+	a = fmod(a, 360.0f);
+	if (a < 0) a += 360;
+	return a;
+}
+
+static void hsv_to_rgb(float h, uint8_t s, uint8_t v, uint8_t *r, uint8_t *g, uint8_t *b) 
+{
+	h = constrain_angle(h);
 	
 	float s_f = s / 255.0f; // 0.0-1.0
 	float v_f = v / 255.0f; // 0.0-1.0

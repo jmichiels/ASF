@@ -30,13 +30,14 @@
 #include <asf.h>
 #include "APA102.h"
 #include "output.h"
+#include "pulses.h"
 
 #define PIN_LED_13 PIN_PA10
 
 #define PIN_LED_APA102_DO PIN_PA00 // data out
 #define PIN_LED_APA102_CO PIN_PA01 // clock out
 
-static struct output led_13;
+static struct output_module led_13;
 
 static void main_init_system(void)
 {
@@ -73,12 +74,15 @@ static float hue = 0;
 
 static void main_callback(struct tc_module *const module)
 {
-	if (++hue > 360.0f) {
-		// Stay in the circle.
-		hue -= 360.0f;
-	}
 	// Update LED hue.	
-	APA102_set_color_hsv(hue++, 0xff, 0xff, 0xff);
+	APA102_set_color_hsv(hue++, 0xff, 0xff, 1);
+}
+
+uint32_t cycles = 0;
+
+static void main_callback_pulses(uint32_t _cycles) {
+	// Count cycles.
+	cycles = _cycles;
 }
 
 static struct tc_module tc_instance;
@@ -116,14 +120,29 @@ int main(void)
 	main_init_system();
 	main_init_serial();
 	
+	if (!pulses_init(TCC1, PIN_PA10, 1000)) {
+		// Something went wrong.
+		APA102_set_color_rgb(0x00,0x00,0xff, 1);
+		return 1;
+	}
+
 	if (!main_init_tc()) {
 		// Something went wrong.
 		APA102_set_color_rgb(0xff,0x00,0x00, 1);
+		return 1;
 	}
+	// Callback in the middle of each pulse cycle (falling edge).
+	pulses_register_callback(main_callback_pulses);
+
+	uint8_t i = 0;
 
 	while (true) {
-		// Enter sleep as everything is done via timers.
-		sleepmgr_enter_sleep();
+		delay_ms(500);
+		pulses_run(500);
+		
+		// Report count on last pulses cycle.
+		printf("cycles run %d: %d\n", i++, cycles);
 	}
+	
+	return 0;
 }
-

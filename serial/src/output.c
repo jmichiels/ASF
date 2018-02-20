@@ -7,7 +7,7 @@
 #include "asf.h"
 #include "output.h"
 
-void output_init(struct output* output_instance, uint8_t gpio_pin)
+void output_init(struct output_module* output_instance, uint8_t gpio_pin)
 {
 	// Get the port for the specified pin.
 	output_instance->port = port_get_group_from_gpio_pin(gpio_pin);

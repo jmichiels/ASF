@@ -9,22 +9,22 @@
 #ifndef OUTPUT_H_
 #define OUTPUT_H_
 
-struct output {
+struct output_module {
 	PortGroup* port;
 	uint32_t mask;
 };
 
-void output_init(struct output* output_instance, uint8_t gpio_pin);
+void output_init(struct output_module* output_instance, uint8_t gpio_pin);
 
-inline void output_set(struct output* output_instance) {
+inline void output_set(struct output_module* output_instance) {
 	output_instance->port->OUTSET.reg = output_instance->mask;
 }
 
-inline void output_clear(struct output* output_instance) {
+inline void output_clear(struct output_module* output_instance) {
 	output_instance->port->OUTCLR.reg = output_instance->mask;
 }
 
-inline void output_toggle(struct output* output_instance) {
+inline void output_toggle(struct output_module* output_instance) {
 	output_instance->port->OUTTGL.reg = output_instance->mask;
 }
 
